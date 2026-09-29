@@ -24,5 +24,6 @@
 
 - 中国大陆默认使用 DaoCloud 的 Python/PostgreSQL 镜像和阿里云 PyPI 镜像，均必须允许通过 `.env` 覆盖；GitHub Actions 使用官方源。
 - 2026-09-29 已在 Ubuntu 1050 Ti 主机完成 Docker 验证：14 项容器测试通过，REST 与 5 个只读 MCP 工具可用；以隔离 SQLite 对现有登录态完成 6 款游戏、14 天、38/38 请求采集并导出 84 行。测试不得占用现有完整版的 8765 端口或改动其数据库。
+- 仓库以 AI Agent 部署和调用为主要场景；`AGENTS.md` 是代理入口，`AI_DEPLOY.md` 是部署与调用契约，`llms.txt` 是机器可读索引。代理不得要求用户在对话中提供 Cookie，也不得读取或回显目标主机上的秘密值。
 
-架构、数据边界或部署方式变化时同步维护本文件和 README。
+架构、数据边界或部署方式变化时同步维护本文件、`AGENTS.md`、`AI_DEPLOY.md` 和 README。

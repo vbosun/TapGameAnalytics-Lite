@@ -1,0 +1,41 @@
+# TapGame Analytics Lite
+
+Self-hosted, owner-only TapTap game analytics for AI-assisted deployment and read-only querying.
+
+## Read first
+
+- AGENTS.md: mandatory rules for coding and deployment agents.
+- AGENT.md: product scope, security boundary, and verified deployment facts.
+- AI_DEPLOY.md: deterministic Linux deployment, verification, and AI tool-use contract.
+- README.md: human-facing features, configuration, REST, MCP, CLI, and PostgreSQL instructions.
+- PRIVACY.md, SECURITY.md, ACCEPTABLE_USE.md: data and acceptable-use policies.
+
+## Supported behavior
+
+- Automatically discover every game readable by the authenticated developer account; no game IDs are configured in advance.
+- Collect owner-authorized exposure, store conversion, launch/new-device, and estimated ad-revenue metrics.
+- Store icons and daily metrics, and generate Markdown reports.
+- Query through REST, CLI, JSON/CSV export, or an optional read-only MCP server.
+- Default to SQLite. PostgreSQL is optional. MCP is included but disabled by default.
+
+## Default endpoints
+
+- REST: http://127.0.0.1:8780
+- OpenAPI: http://127.0.0.1:8780/docs
+- MCP when enabled: http://127.0.0.1:8765/mcp
+
+## MCP tools
+
+- get_owner_collection_status
+- list_owner_games
+- query_owner_portfolio_metrics
+- query_owner_game_metrics
+- get_owner_game_daily_report
+
+Call collection status first, discover games second, then query portfolio or game metrics. Dates use YYYY-MM-DD. Missing or null delayed revenue is not zero.
+
+## Security contract
+
+Never ask a user to paste a Cookie, password, token, or database credential into chat. The user places the Cookie directly on the deployment host. Never print, upload, commit, or include secret values in logs or reports. Inspect existing services before deployment and do not stop, delete, move, or overwrite them without explicit authorization.
+
+This Lite repository has no market scraping, rankings, third-party games, reviews, competitor research, Milvus, embeddings, or vector search.

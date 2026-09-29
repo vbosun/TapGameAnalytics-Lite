@@ -6,6 +6,16 @@
 
 > 非官方第三方项目，与 TapTap 不存在隶属、合作或授权关系。开发者后台接口不是公开稳定 API；请只访问本人有权读取的数据，并自行遵守平台协议。
 
+## AI 直接部署与使用
+
+本仓库提供专门给 AI Agent 读取的入口：[AGENTS.md](AGENTS.md)、[AI_DEPLOY.md](AI_DEPLOY.md) 和 [llms.txt](llms.txt)。其中包含非交互部署顺序、端口冲突处理、秘密保护、验收标准，以及部署后调用 MCP/REST 的约定。
+
+可以把下面这句话连同仓库地址直接交给 AI：
+
+```text
+请先完整阅读 AGENTS.md、AGENT.md 和 AI_DEPLOY.md，再按文档通过已授权的 SSH 部署并验收。不要让我在对话里发送 Cookie，不要读取或打印 Cookie，也不要停止或覆盖主机上的既有服务。
+```
+
 ## 能力
 
 - Docker Compose 一键部署。
@@ -115,6 +125,8 @@ stdio 模式：
 ```bash
 python -m tapgame_mcp --transport stdio
 ```
+
+给 AI 使用时，建议先调用 `get_owner_collection_status`，再调用 `list_owner_games` 自动取得游戏标识，随后按需查询全部游戏或单游戏指标。收入缺失或为 `null` 表示尚无可确认数据，不能按 0 处理。完整调用约定见 [AI_DEPLOY.md](AI_DEPLOY.md#8-ai-使用-mcp)。
 
 ## CLI 查询和导出
 
