@@ -33,6 +33,8 @@ chmod 600 secrets/developer.cookie
 docker compose up -d --build
 ```
 
+默认使用 DaoCloud 的 Python/PostgreSQL 镜像和清华 PyPI 镜像，适合中国大陆网络。可在 `.env` 中通过 `TAP_GAME_PYTHON_IMAGE`、`TAP_GAME_POSTGRES_IMAGE`、`TAP_GAME_PIP_INDEX_URL` 换成官方源、其他镜像或企业私有仓库；不需要修改 Dockerfile。
+
 `nano` 中粘贴一行完整 Cookie 后，按 `Ctrl+O`、回车保存，再按 `Ctrl+X` 退出。Cookie 必须包含 `DC_XSRF_TOKEN`。
 
 容器使用 UID `10001`。如果容器无法读写 Cookie 文件，可执行：

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tap-game-analytics-lite"
-version = "0.1.1"
+version = "0.1.2"
 description = "Self-hosted TapTap owner analytics, daily reports, REST API and optional MCP"
 readme = "README.md"
 license = {file = "LICENSE"}

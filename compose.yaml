@@ -1,7 +1,11 @@
 name: tapgame-analytics-lite
 
 x-common: &common
-  build: .
+  build:
+    context: .
+    args:
+      PYTHON_IMAGE: ${TAP_GAME_PYTHON_IMAGE:-docker.m.daocloud.io/library/python:3.12-slim}
+      PIP_INDEX_URL: ${TAP_GAME_PIP_INDEX_URL:-https://pypi.tuna.tsinghua.edu.cn/simple}
   restart: unless-stopped
   env_file:
     - path: .env
@@ -57,7 +61,7 @@ services:
       - "${TAP_GAME_MCP_BIND:-127.0.0.1}:${TAP_GAME_MCP_PORT:-8765}:8765"
 
   postgres:
-    image: postgres:17-alpine
+    image: ${TAP_GAME_POSTGRES_IMAGE:-docker.m.daocloud.io/library/postgres:17-alpine}
     profiles: ["postgres"]
     restart: unless-stopped
     environment:

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2 - 2026-09-29
+
+- 中国大陆部署默认使用 DaoCloud 容器镜像和清华 PyPI 镜像。
+- 容器镜像及 Python 包源均可通过 `.env` 覆盖，无需修改 Dockerfile。
+
 ## 0.1.1 - 2026-09-29
 
 - 排除 Docker 构建上下文中的 `.env`、Cookie、数据库、报告、Git 历史和本地构建产物。
