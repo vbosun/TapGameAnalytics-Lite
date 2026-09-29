@@ -29,4 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: docker compose config
-      - run: docker build -t tapgame-analytics-lite:test .
+      - run: >-
+          docker build -t tapgame-analytics-lite:test
+          --build-arg PYTHON_IMAGE=python:3.12-slim
+          --build-arg PIP_INDEX_URL=https://pypi.org/simple .

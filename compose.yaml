@@ -1,11 +1,12 @@
 name: tapgame-analytics-lite
 
 x-common: &common
+  image: ${TAP_GAME_IMAGE:-tapgame-analytics-lite:latest}
   build:
     context: .
     args:
       PYTHON_IMAGE: ${TAP_GAME_PYTHON_IMAGE:-docker.m.daocloud.io/library/python:3.12-slim}
-      PIP_INDEX_URL: ${TAP_GAME_PIP_INDEX_URL:-https://pypi.tuna.tsinghua.edu.cn/simple}
+      PIP_INDEX_URL: ${TAP_GAME_PIP_INDEX_URL:-https://mirrors.aliyun.com/pypi/simple}
   restart: unless-stopped
   env_file:
     - path: .env

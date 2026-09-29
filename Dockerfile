@@ -1,11 +1,11 @@
+# syntax=docker/dockerfile:1
 ARG PYTHON_IMAGE=docker.m.daocloud.io/library/python:3.12-slim
 FROM ${PYTHON_IMAGE}
 
-ARG PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
+ARG PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
     PIP_INDEX_URL=${PIP_INDEX_URL}
 
 WORKDIR /app
@@ -16,7 +16,7 @@ COPY tapintel tapintel
 COPY tapgame_mcp tapgame_mcp
 COPY tapgame_api tapgame_api
 COPY tools tools
-RUN pip install --upgrade pip && pip install ".[postgres]"
+RUN --mount=type=cache,target=/root/.cache/pip pip install ".[postgres]"
 
 RUN useradd --create-home --uid 10001 tapgame && mkdir -p /data /run/tapgame && \
     chown -R tapgame:tapgame /data /run/tapgame
