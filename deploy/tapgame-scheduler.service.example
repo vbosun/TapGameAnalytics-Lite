@@ -1,0 +1,18 @@
+[Unit]
+Description=TapGame Analytics Lite daily owner-data scheduler
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=REPLACE_WITH_USER
+WorkingDirectory=/opt/TapGameAnalytics-Lite
+EnvironmentFile=/opt/TapGameAnalytics-Lite/.env
+ExecStart=/opt/TapGameAnalytics-Lite/.venv/bin/python -m tools.owner_scheduler
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

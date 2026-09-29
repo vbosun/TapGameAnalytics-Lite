@@ -1,0 +1,77 @@
+name: tapgame-analytics-lite
+
+x-common: &common
+  build: .
+  restart: unless-stopped
+  env_file:
+    - path: .env
+      required: false
+  environment:
+    TAP_GAME_DATABASE_URL: ${TAP_GAME_COMPOSE_DATABASE_URL:-sqlite:////data/tapgame.db}
+    TAP_GAME_DEVELOPER_COOKIE_FILE: /run/tapgame/developer.cookie
+    TAP_GAME_OWNER_REPORT_DIR: /data/reports
+  volumes:
+    - tapgame-data:/data
+    - ./secrets/developer.cookie:/run/tapgame/developer.cookie
+  security_opt:
+    - no-new-privileges:true
+
+services:
+  api:
+    <<: *common
+    command: ["python", "-m", "tapgame_api"]
+    environment:
+      TAP_GAME_DATABASE_URL: ${TAP_GAME_COMPOSE_DATABASE_URL:-sqlite:////data/tapgame.db}
+      TAP_GAME_API_HOST: 0.0.0.0
+      TAP_GAME_API_PORT: 8780
+      TAP_GAME_API_TOKEN: ${TAP_GAME_API_TOKEN:-}
+    ports:
+      - "${TAP_GAME_API_BIND:-127.0.0.1}:${TAP_GAME_API_PORT:-8780}:8780"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8780/healthz', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  scheduler:
+    <<: *common
+    command: ["python", "-m", "tools.owner_scheduler"]
+    environment:
+      TAP_GAME_DATABASE_URL: ${TAP_GAME_COMPOSE_DATABASE_URL:-sqlite:////data/tapgame.db}
+      TAP_GAME_DEVELOPER_COOKIE_FILE: /run/tapgame/developer.cookie
+      TAP_GAME_OWNER_REPORT_DIR: /data/reports
+      TAP_GAME_SCHEDULER_STATE: /data/owner-scheduler.json
+      TAP_GAME_DAILY_HOUR: ${TAP_GAME_DAILY_HOUR:-9}
+      TAP_GAME_ALERT_WEBHOOK: ${TAP_GAME_ALERT_WEBHOOK:-}
+
+  mcp:
+    <<: *common
+    profiles: ["mcp"]
+    command: ["python", "-m", "tapgame_mcp", "--transport", "streamable-http", "--host", "0.0.0.0"]
+    environment:
+      TAP_GAME_DATABASE_URL: ${TAP_GAME_COMPOSE_DATABASE_URL:-sqlite:////data/tapgame.db}
+      TAP_GAME_MCP_HOST: 0.0.0.0
+      TAP_GAME_MCP_PORT: 8765
+      TAP_GAME_MCP_ALLOWED_HOSTS: ${TAP_GAME_MCP_ALLOWED_HOSTS:-127.0.0.1:*,localhost:*,mcp:*}
+    ports:
+      - "${TAP_GAME_MCP_BIND:-127.0.0.1}:${TAP_GAME_MCP_PORT:-8765}:8765"
+
+  postgres:
+    image: postgres:17-alpine
+    profiles: ["postgres"]
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-tapgame}
+      POSTGRES_USER: ${POSTGRES_USER:-tapgame}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me-before-use}
+    volumes:
+      - tapgame-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  tapgame-data:
+  tapgame-postgres:

@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tap-game-analytics-lite"
+version = "0.1.0"
+description = "Self-hosted TapTap owner analytics, daily reports, REST API and optional MCP"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+dependencies = [
+    "mcp[cli]>=1.26,<2",
+    "fastapi>=0.115,<1",
+    "uvicorn>=0.34,<1",
+    "tzdata>=2025.2",
+]
+
+[project.optional-dependencies]
+postgres = ["psycopg[binary]>=3.2,<4"]
+dev = ["httpx>=0.27,<1"]
+
+[project.scripts]
+tapgame-lite = "tapintel.__main__:main"
+tapgame-mcp = "tapgame_mcp.__main__:main"
+tapgame-api = "tapgame_api.__main__:main"
+
+[tool.setuptools]
+packages = ["tapintel", "tapgame_mcp", "tapgame_api", "tools"]
+
+[tool.setuptools.package-data]
+tapintel = ["*.sql"]
